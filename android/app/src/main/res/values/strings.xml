@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SGS Quiz</string>
+    <string name="title_activity_main">SGS Quiz</string>
+    <string name="package_name">webapp.softgamestudio.sgsquiz</string>
+    <string name="custom_url_scheme">webapp.softgamestudio.sgsquiz</string>
+</resources>
