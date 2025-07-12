@@ -197,7 +197,10 @@ const NavigationBar = () => {
       {/* Menu Items */}
       <div className="py-2">
         <button onClick={() => {navigate('/SGS-Quiz-Result')}} className="w-full text-left px-4 py-3 text-purple-800 hover:bg-purple-100">
-          Result
+          SGS Quiz Result
+        </button>
+         <button onClick={() => {navigate('/SGS-DailyQuiz-Result')}} className="w-full text-left px-4 py-3 text-purple-800 hover:bg-purple-100">
+          Weekly Quiz Result
         </button>
       </div>
 

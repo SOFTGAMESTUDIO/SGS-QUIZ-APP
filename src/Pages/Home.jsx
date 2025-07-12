@@ -1,28 +1,32 @@
 // src/pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
 import { FaPlay, FaTrophy, FaUserFriends, FaBook, FaStar } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
+  const navigate = useNavigate();
   // Quiz categories data
   const categories = [
-    { id: 1, name: "Science", icon: <FaBook className="text-xl" />, color: "bg-purple-500" },
-    { id: 2, name: "History", icon: <FaBook className="text-xl" />, color: "bg-indigo-500" },
-    { id: 3, name: "Geography", icon: <FaBook className="text-xl" />, color: "bg-pink-500" },
-    { id: 4, name: "Movies", icon: <FaBook className="text-xl" />, color: "bg-rose-500" },
+    { id: 1, name: "Science", icon: <FaBook className="text-xl" />, color: "bg-purple-500", herf: "" },
+    { id: 2, name: "History", icon: <FaBook className="text-xl" />, color: "bg-indigo-500",herf: "" },
+    { id: 3, name: "Geography", icon: <FaBook className="text-xl" />, color: "bg-pink-500",herf: "" },
+    { id: 4, name: "Movies", icon: <FaBook className="text-xl" />, color: "bg-rose-500", herf: "" },
   ];
   
   // Featured quizzes
   const featuredQuizzes = [
-    { id: 1, title: "World Capitals Challenge", players: 12500, questions: 10 },
-    { id: 2, title: "Science Trivia Showdown", players: 9800, questions: 15 },
-    { id: 3, title: "Movie Quote Quiz", players: 15600, questions: 12 },
+    { id: 1, title: "World Capitals Challenge", players: 12500, questions: 10, herf: "" },
+    { id: 2, title: "Science Trivia Showdown", players: 9800, questions: 15, herf: "" },
+    { id: 3, title: "Movie Quote Quiz", players: 15600, questions: 12, herf: "" },
   ];
   
   // Image slides for the carousel
   const slides = [
-    { id: 1, title: "Daily Quiz Challenge", description: "Test your knowledge every day!" },
+    { id: 1, title: "Weekly Quiz Challenge", description: "Test your knowledge every day!" },
     { id: 2, title: "Compete with Friends", description: "Challenge your friends and climb the leaderboard" },
     { id: 3, title: "Earn Achievements", description: "Unlock badges and show off your expertise" },
   ];
@@ -41,14 +45,14 @@ const HomePage = () => {
       <div className="relative bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-12 px-4 rounded-b-3xl shadow-lg">
         <div className="max-w-md mx-auto text-center">
           <div className="flex justify-center mb-4">
-            <div className="bg-white/20 p-3 rounded-full">
-              <FaStar className="text-yellow-300 text-3xl" />
+            <div className="bg-white/20 w-20 overflow-hidden rounded-full">
+            <img src="../assets/icon.png" className='w-20' alt="" />
             </div>
           </div>
           <h1 className="text-4xl font-bold mb-3">SGS QUIZ</h1>
           <p className="text-lg mb-6 opacity-90">Test your knowledge, challenge friends, and become a trivia master!</p>
-          <button className="bg-white text-purple-700 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-purple-100 transition-all transform hover:scale-105">
-            <FaPlay className="inline-block mr-2" /> Play Now
+          <button onClick={() => {navigate('/DailyQuiz')}} className="bg-white text-purple-700 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-purple-100 transition-all transform hover:scale-105">
+            <FaPlay className="inline-block mr-2" /> Play Weekly Quiz
           </button>
         </div>
         

@@ -30,6 +30,9 @@ import { Capacitor } from '@capacitor/core';
 import {checkStoragePermission } from './deviceUtils';
 import OurMembers from "./Pages/Members/OurMembers";
 import ResultsPage from "./Pages/Result/Result";
+import DailyQuiz from "./Pages/DailyQuiz/DailyQuiz";
+import DailyQuizList from "./Pages/DailyQuiz/DailyQuizList";
+import DailyResultsPage from "./Pages/Result/DailyResult";
 
 
 
@@ -93,6 +96,11 @@ function App() {
          <Route path="/Exam-Quiz-Details/:id" element={<ExamQuizDetailsOfficial/>} />
          <Route path="/SGS-Quiz/:id" element={<QuizExamOfficial/>} />
          <Route path="/SGS-Quiz-Result" element={<ResultsPage/>} />
+
+        {/* Daily Quiz */}
+        <Route path="/DailyQuiz" element={<DailyQuizList/>} />
+        <Route path="/DailyQuiz/:id" element={<DailyQuiz/>} />
+        <Route path="/SGS-DailyQuiz-Result" element={<DailyResultsPage/>} />
         
         {/* Add redirect for root path */}
         <Route path="/" element={<NavigationBar/>} />
