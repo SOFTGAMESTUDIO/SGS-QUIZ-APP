@@ -70,6 +70,68 @@ const HomePage = () => {
       return () => clearInterval(interval);
     }, [quizzes]);
 
+
+
+const [totalQuizzes, setTotalQuizzes] = useState(0);
+const [totalQuestions, setTotalQuestions] = useState(0);
+
+useEffect(() => {
+  const fetchQuizzesData = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(fireDB, "quizzesfree"));
+      const querySnapshot1 = await getDocs(collection(fireDB, "quizzes"));
+      const querySnapshot2 = await getDocs(collection(fireDB, "user_DailyQuiz"));
+
+      const allQuizzes = [];
+
+      querySnapshot.forEach((doc) => {
+        allQuizzes.push({ id: doc.id, ...doc.data() });
+      });
+      querySnapshot1.forEach((doc) => {
+        allQuizzes.push({ id: doc.id, ...doc.data() });
+      });
+      querySnapshot2.forEach((doc) => {
+        allQuizzes.push({ id: doc.id, ...doc.data() });
+      });
+
+      // Count total number of quizzes and questions
+      const quizCount = allQuizzes.length;
+      const questionCount = allQuizzes.reduce((acc, quiz) => {
+        return acc + (quiz.questions?.length || 0);
+      }, 0);
+
+      setTotalQuizzes(quizCount);
+      setTotalQuestions(questionCount);
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+    } 
+  };
+
+  fetchQuizzesData();
+}, []);
+
+const [totalUser, setTotalUser] = useState(0);
+
+
+useEffect(() => {
+  const fetchUserData = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(fireDB, "users"));
+      const userCount = querySnapshot.size; // 🔥 No need to loop, just use size
+
+      setTotalUser(userCount);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  fetchUserData();
+}, []);
+
+
+
+
+
   const handleOpenQuiz = (quiz) => {
     window.location.href = `/SGS-Quiz-Open/${quiz.id}`;
   };
@@ -176,17 +238,20 @@ const HomePage = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Quiz Community</h2>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div className="bg-white p-4 rounded-xl shadow">
-            <div className="text-xl font-bold text-purple-600">500K+</div>
+            <div className="text-xl font-bold text-purple-600">{totalUser}</div>
             <div className="text-gray-600 text-sm mt-1">Players</div>
           </div>
+          
           <div className="bg-white p-4 rounded-xl shadow">
-            <div className="text-xl font-bold text-purple-600">20K+</div>
+            <div className="text-xl font-bold text-purple-600">{totalQuizzes}</div>
             <div className="text-gray-600 text-sm mt-1">Quizzes</div>
           </div>
           <div className="bg-white p-4 rounded-xl shadow">
-            <div className="text-xl font-bold text-purple-600">10M+</div>
+            <div className="text-xl font-bold text-purple-600">{totalQuestions}</div>
             <div className="text-gray-600 text-sm mt-1">Questions</div>
           </div>
+
+          
         </div>
       </div>
       
