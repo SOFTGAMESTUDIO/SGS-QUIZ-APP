@@ -26,8 +26,6 @@ import QuizExam from "./Pages/QuizFree/EXAM CONTROLER/QuizExam";
 
 import ExamQuizDetailsOfficial from "./Pages/Quiz/EXAM CONTROLER/ExamDetails";
 import QuizExamOfficial from "./Pages/Quiz/EXAM CONTROLER/QuizExam";
-import { Capacitor } from '@capacitor/core';
-import {checkStoragePermission } from './deviceUtils';
 import OurMembers from "./Pages/Members/OurMembers";
 import ResultsPage from "./Pages/Result/Result";
 import DailyQuiz from "./Pages/DailyQuiz/DailyQuiz";
@@ -45,15 +43,7 @@ StatusBar.setStyle({ style: Style.Light }); // dark text for light background
 
 
 function App() {
-  useEffect(() => {
-    const initializeApp = async () => {
-      if (Capacitor.isNativePlatform()) {
-        await checkStoragePermission();
-      }
-    };
-    
-    initializeApp();
-  }, []);
+  
 
   return (
     <Router

@@ -100,7 +100,8 @@ const ContactPage = () => {
                   <FaPhone className="text-purple-600 text-xl mt-1" />
                   <div>
                     <p className="font-semibold text-purple-700">Phone:</p>
-                    <p>+91 No Available</p>
+                    <p>For Hindi: +91 9914267704</p>
+                    <p>For English: +91 6283400770</p>
                   </div>
                 </div>
 

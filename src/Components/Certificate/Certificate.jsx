@@ -10,7 +10,7 @@ import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Preferences } from '@capacitor/preferences';
 import { Dialog } from '@capacitor/dialog';
 import { Capacitor } from '@capacitor/core';
-import { Device } from '@capacitor/device';
+import { FileOpener } from '@capacitor-community/file-opener';
 
 const Certificate = ({
   name = "Livesh Garg",
@@ -24,34 +24,19 @@ const Certificate = ({
   const printRef = useRef();
   const [storagePermission, setStoragePermission] = useState(false);
   const [isNativePlatform, setIsNativePlatform] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [filePath, setFilePath] = useState('');
+  const isDownloadingRef = useRef(false);
 
   useEffect(() => {
-    const init = async () => {
-      const platform = Capacitor.getPlatform();
-      setIsNativePlatform(platform !== 'web');
-      
-      if (platform !== 'web') {
-        await checkDeveloperMode();
-        await checkStoragePermission();
-      }
-    };
-    init();
-  }, []);
-
-  const checkDeveloperMode = async () => {
-    try {
-      const info = await Device.getInfo();
-      if (info.isDebug) {
-        await Dialog.alert({
-          title: 'Developer Mode Detected',
-          message: 'For security and best performance, please disable developer options on your device.',
-          buttonTitle: 'OK',
-        });
-      }
-    } catch (error) {
-      console.error('Error checking developer mode:', error);
+    const platform = Capacitor.getPlatform();
+    setIsNativePlatform(platform !== 'web');
+    
+    if (platform !== 'web') {
+      checkStoragePermission();
     }
-  };
+  }, []);
 
   const checkStoragePermission = async () => {
     try {
@@ -105,7 +90,6 @@ const Certificate = ({
     document.body.appendChild(container);
 
     try {
-      // Wait for images to load
       const images = clone.querySelectorAll("img");
       await Promise.all(
         Array.from(images).map(img => {
@@ -143,29 +127,64 @@ const Certificate = ({
       const fileName = `SGS_Certificate_${name.replace(/\s+/g, '_')}_${date}.pdf`;
       const pdfData = pdf.output('datauristring').split(',')[1];
       
-      await Filesystem.writeFile({
+      const result = await Filesystem.writeFile({
         path: `Download/SGS_Certificates/${fileName}`,
         data: pdfData,
         directory: Directory.ExternalStorage,
         recursive: true
       });
 
-      await Dialog.alert({
-        title: 'Success',
-        message: `Certificate saved to Downloads/SGS_Certificates folder`,
-        buttonTitle: 'OK',
-      });
+      setFilePath(result.uri);
+      return result;
     } catch (error) {
       console.error('Save failed:', error);
       throw error;
     }
   };
 
-  const handleDownload = async () => {
+  const openCertificateLocation = async () => {
     try {
+      if (isNativePlatform && filePath) {
+        await FileOpener.open({ 
+          filePath: filePath,
+          contentType: 'application/pdf'
+        });
+      } else {
+        const downloadPath = navigator.userAgent.includes('Windows') ? 
+          'C:\\Users\\[Username]\\Downloads' : 
+          '/Users/[Username]/Downloads';
+        
+        await Dialog.alert({
+          title: 'Certificate Location',
+          message: `Your certificate has been saved to: ${downloadPath}/SGS_Certificates`,
+          buttonTitle: 'OK',
+        });
+      }
+    } catch (error) {
+      console.error('Error opening file location:', error);
+      Dialog.alert({
+        title: 'Error',
+        message: 'Could not open certificate location',
+        buttonTitle: 'OK',
+      });
+    }
+  };
+
+  const handleDownload = async () => {
+    if (isDownloadingRef.current) return;
+    isDownloadingRef.current = true;
+    
+    try {
+      setIsDownloading(true);
+      setDownloadSuccess(false);
+      
       if (isNativePlatform && !storagePermission) {
         const granted = await requestStoragePermission();
-        if (!granted) return;
+        if (!granted) {
+          setIsDownloading(false);
+          isDownloadingRef.current = false;
+          return;
+        }
       }
 
       const pdf = await generateCertificatePDF();
@@ -175,6 +194,9 @@ const Certificate = ({
       } else {
         pdf.save(`SGS_Certificate_${name.replace(/\s+/g, '_')}.pdf`);
       }
+      
+      setDownloadSuccess(true);
+      
     } catch (error) {
       console.error("Download failed:", error);
       await Dialog.alert({
@@ -182,18 +204,78 @@ const Certificate = ({
         message: `Download failed: ${error.message || 'Please try again'}`,
         buttonTitle: 'OK',
       });
+    } finally {
+      setIsDownloading(false);
+      isDownloadingRef.current = false;
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 p-4 sm:p-10">
+      {isDownloading && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl text-center max-w-xs sm:max-w-md">
+            <div className="flex justify-center mb-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
+            </div>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
+              Generating Certificate
+            </h3>
+            <p className="text-gray-600 text-sm sm:text-base">
+              Please wait while we prepare and save your certificate...
+            </p>
+            <p className="text-gray-500 text-xs mt-2">
+              This may take 5-10 seconds
+            </p>
+          </div>
+        </div>
+      )}
+
+      {downloadSuccess && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl text-center max-w-xs sm:max-w-md">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-green-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
+              Download Complete!
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Certificate saved successfully
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2 justify-center">
+              <button
+                onClick={openCertificateLocation}
+                className="bg-purple-500 hover:bg-purple-600 text-white font-semibold px-4 py-2 rounded transition"
+              >
+                {isNativePlatform ? 'Open Certificate' : 'Show Location'}
+              </button>
+              <button
+                onClick={() => setDownloadSuccess(false)}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row gap-4 mb-8">
         <button
           onClick={handleDownload}
-          className="text-white font-semibold px-8 py-3 rounded-lg transition bg-purple-400 hover:bg-purple-500"
-          disabled={isNativePlatform && !storagePermission}
+          className={`text-white font-semibold px-8 py-3 rounded-lg transition ${
+            isDownloading ? 'bg-purple-300 cursor-not-allowed' : 'bg-purple-500 hover:bg-purple-600'
+          }`}
+          disabled={isDownloading || (isNativePlatform && !storagePermission)}
         >
-          Download Certificate
+          {isDownloading ? (
+            <div className="flex items-center justify-center">
+              <span>Downloading...</span>
+            </div>
+          ) : (
+            'Download Certificate'
+          )}
         </button>
       </div>
 

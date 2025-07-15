@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { sendResetPasswordEmail } from "../../Modules/SetNewPassword";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import Layout from "../../Components/Layout";
 
 export default function UserResetPasswordPage() {
   const [email, setEmail] = useState("");
@@ -25,6 +26,7 @@ export default function UserResetPasswordPage() {
   };
 
   return (
+    <Layout>
     <div className="min-h-screen bg-purple-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6 md:p-8">
         <div className="text-center mb-6">
@@ -97,5 +99,7 @@ export default function UserResetPasswordPage() {
         </p>
       </div>
     </div>
+    </Layout>
+
   );
 }

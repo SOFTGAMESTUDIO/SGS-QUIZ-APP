@@ -1,7 +1,9 @@
 // src/pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
-import { FaPlay, FaTrophy, FaUserFriends, FaBook, FaStar } from 'react-icons/fa';
+import { FaPlay, FaCode, } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { collection, getDocs } from "firebase/firestore";
+import { fireDB } from "../DataBase/firebaseConfig";
 
 
 
@@ -9,20 +11,7 @@ const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
   const navigate = useNavigate();
-  // Quiz categories data
-  const categories = [
-    { id: 1, name: "Science", icon: <FaBook className="text-xl" />, color: "bg-purple-500", herf: "" },
-    { id: 2, name: "History", icon: <FaBook className="text-xl" />, color: "bg-indigo-500",herf: "" },
-    { id: 3, name: "Geography", icon: <FaBook className="text-xl" />, color: "bg-pink-500",herf: "" },
-    { id: 4, name: "Movies", icon: <FaBook className="text-xl" />, color: "bg-rose-500", herf: "" },
-  ];
   
-  // Featured quizzes
-  const featuredQuizzes = [
-    { id: 1, title: "World Capitals Challenge", players: 12500, questions: 10, herf: "" },
-    { id: 2, title: "Science Trivia Showdown", players: 9800, questions: 15, herf: "" },
-    { id: 3, title: "Movie Quote Quiz", players: 15600, questions: 12, herf: "" },
-  ];
   
   // Image slides for the carousel
   const slides = [
@@ -30,6 +19,60 @@ const HomePage = () => {
     { id: 2, title: "Compete with Friends", description: "Challenge your friends and climb the leaderboard" },
     { id: 3, title: "Earn Achievements", description: "Unlock badges and show off your expertise" },
   ];
+
+
+    const [quizzes, setQuizzes] = useState([]);
+    const [timers, setTimers] = useState({});
+  
+    useEffect(() => {
+      const fetchQuizzes = async () => {
+        try {
+          const querySnapshot = await getDocs(collection(fireDB, "quizzesfree"));
+          const quizzesData = [];
+          querySnapshot.forEach((doc) => {
+            quizzesData.push({ id: doc.id, ...doc.data() });
+          });
+          setQuizzes(quizzesData);
+        } catch (error) {
+          console.error("Error fetching quizzes:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchQuizzes();
+    }, []);
+  
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const updatedTimers = {};
+        quizzes.forEach((quiz) => {
+          const examTime = new Date(quiz.examPage).getTime();
+          const now = new Date().getTime();
+          const timeLeft = examTime - now;
+    
+          if (timeLeft <= 0) {
+            updatedTimers[quiz.id] = "STARTED";
+          } else {
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+             if (days > 0) {
+               updatedTimers[quiz.id] = `${days}days `;
+            } else {   
+              updatedTimers[quiz.id] = `${hours}H ${minutes}M ${seconds}S`; 
+            }
+          }
+        });
+        setTimers(updatedTimers);
+      }, 1000);
+    
+      return () => clearInterval(interval);
+    }, [quizzes]);
+
+  const handleOpenQuiz = (quiz) => {
+    window.location.href = `/SGS-Quiz-Open/${quiz.id}`;
+  };
   
   // Auto-rotate slides
   useEffect(() => {
@@ -51,6 +94,9 @@ const HomePage = () => {
           </div>
           <h1 className="text-4xl font-bold mb-3">SGS QUIZ</h1>
           <p className="text-lg mb-6 opacity-90">Test your knowledge, challenge friends, and become a trivia master!</p>
+         
+       
+         
           <button onClick={() => {navigate('/DailyQuiz')}} className="bg-white text-purple-700 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-purple-100 transition-all transform hover:scale-105">
             <FaPlay className="inline-block mr-2" /> Play Weekly Quiz
           </button>
@@ -92,45 +138,34 @@ const HomePage = () => {
         </div>
       </div>
       
-      {/* Categories Section */}
-      <div className="mt-10 px-4">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Quiz Categories</h2>
-        <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-          {categories.map((category) => (
-            <div 
-              key={category.id} 
-              className={`${category.color} rounded-2xl p-5 text-white shadow-md transition-transform hover:scale-105 cursor-pointer`}
-            >
-              <div className="flex flex-col items-center">
-                <div className="mb-3 bg-white/30 p-3 rounded-full">
-                  {category.icon}
-                </div>
-                <h3 className="font-bold text-lg">{category.name}</h3>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      
+    
       {/* Featured Quizzes */}
       <div className="mt-12 px-4">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Featured Quizzes</h2>
         <div className="max-w-md mx-auto space-y-4">
-          {featuredQuizzes.map((quiz) => (
+          
+           {quizzes.map((quiz) => (
             <div 
               key={quiz.id} 
               className="bg-white rounded-xl shadow-md p-5 flex justify-between items-center border-l-4 border-purple-500"
             >
               <div>
-                <h3 className="font-bold text-gray-800">{quiz.title}</h3>
+                <h3 className="font-bold text-gray-800">{quiz.name}</h3>
+                  <span><FaCode className="inline mr-1 text-purple-500" /> {quiz.language}</span>
                 <div className="flex mt-2 space-x-4 text-sm text-gray-600">
-                  <span><FaUserFriends className="inline mr-1 text-purple-500" /> {quiz.players.toLocaleString()}</span>
-                  <span>{quiz.questions} questions</span>
+                  <span>{quiz.questions.length} questions</span>
                 </div>
               </div>
-              <button className="bg-purple-600 text-white py-2 px-4 rounded-lg text-sm hover:bg-purple-700 transition-colors">
+                {timers[quiz.id] === "STARTED" ? 
+                
+              <button  onClick={() => handleOpenQuiz(quiz)} className="bg-purple-600 text-white py-2 px-4 rounded-lg text-sm hover:bg-purple-700 transition-colors">
                 Play
               </button>
+              :
+              <button className="bg-purple-600 text-white py-2 px-4 rounded-lg text-sm hover:bg-purple-700 transition-colors">
+                {timers[quiz.id] || "Loading timer..."}
+              </button>
+}
             </div>
           ))}
         </div>
@@ -161,8 +196,8 @@ const HomePage = () => {
         <p className="text-gray-600 mb-6 max-w-md mx-auto">
           Join millions of players worldwide in the ultimate trivia experience!
         </p>
-        <button className="bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
-          Start Playing Now
+        <button  className="bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+          Soft Game Studio Quiz
         </button>
       </div>
     </div>

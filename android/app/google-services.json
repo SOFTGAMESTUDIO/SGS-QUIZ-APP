@@ -8,14 +8,14 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:884680707122:android:afaa2c06ee88c39e74002b",
+        "mobilesdk_app_id": "1:884680707122:android:6fc675101207220d74002b",
         "android_client_info": {
           "package_name": "webapp.softgamestudio.sgsquiz"
         }
       },
       "oauth_client": [
         {
-          "client_id": "884680707122-90vk4f2pc4jpfejtciv52g3kamk2gm9l.apps.googleusercontent.com",
+          "client_id": "884680707122-blhgbcdb92ffo1bdjgq4d1u1g3u0bc2c.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "webapp.softgamestudio.sgsquiz",

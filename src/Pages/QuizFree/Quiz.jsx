@@ -40,7 +40,11 @@ const ExamList = () => {
           const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
           const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-          updatedTimers[quiz.id] = `${days}d ${hours}h ${minutes}m ${seconds}s remaining`;
+           if (days > 0) {
+               updatedTimers[quiz.id] = `${days}days `;
+            } else {   
+              updatedTimers[quiz.id] = `${hours}H ${minutes}M ${seconds}S`; 
+            }
         }
       });
       setTimers(updatedTimers);

@@ -460,7 +460,6 @@ export default function FeedbackSection() {
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="font-bold text-gray-800">{fb.name}</h3>
-                        <p className="text-sm text-gray-500">{fb.email}</p>
                       </div>
                       <span className="text-xs text-gray-400">
                         {fb.createdAt.toLocaleDateString()}

@@ -56,7 +56,11 @@ const ExamQuizDetails = () => {
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s remaining`);
+         if (days > 0) {
+               setTimeLeft(`${days}days `);
+            } else {   
+              setTimeLeft(`${hours}H ${minutes}M ${seconds}S`); 
+            }
       }
     }, 1000);
 
