@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "884680707122",
+    "firebase_url": "https://webjl26-default-rtdb.firebaseio.com",
+    "project_id": "webjl26",
+    "storage_bucket": "webjl26.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884680707122:android:afaa2c06ee88c39e74002b",
+        "android_client_info": {
+          "package_name": "webapp.softgamestudio.sgsquiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "884680707122-90vk4f2pc4jpfejtciv52g3kamk2gm9l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "webapp.softgamestudio.sgsquiz",
+            "certificate_hash": "60cc87950477a65e425b75bbde9165766dc5c2c6"
+          }
+        },
+        {
+          "client_id": "884680707122-tnq58hi90li89opki9a685jjp58hh1d1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ6hTiC1WAYhvPv1wP72FLJsmcELjRO4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "884680707122-hiofe5af54gjv9lapf2s3iu2po70muof.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
