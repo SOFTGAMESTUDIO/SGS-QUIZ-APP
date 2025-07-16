@@ -129,11 +129,9 @@ This project is licensed under the **MIT License**.
 
 ## ✨ Developed by
 
-**Sift Game Studio**
-🔗 [softgamestudio.in](https://softgamestudio.in)
-📧 [softgamestudio@gmail.com](mailto:softgamestudio@gmail.com)
-📱 +91-xxxxxxxxxx
-
+**Soft Game Studio**
+🔗 [softgamestudio.web.app](https://softgamestudio.web.app)
+📧 [officialsoftgamestudio@gmail.com](mailto:officialsoftgamestudio@gmail.com)
 ```
 
 ---
