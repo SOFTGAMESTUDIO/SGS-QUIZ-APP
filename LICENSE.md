@@ -40,7 +40,7 @@ SOFTWARE.
 - 📄 **License Page**: [softgamestudio.web.app/CopyrightPage](https://softgamestudio.web.app/CopyrightPage)
 - 🌐 **Open Source Projects**: [github.com/SOFTGAMESTUDIO/SoftGameStudio](https://github.com/SOFTGAMESTUDIO/SoftGameStudio)
 - 📧 **Contact**: [team.softgamestudio@gmail.com](mailto:team.softgamestudio@gmail.com)
-- 🖥️ **Portfolio Website**: [webjl.web.app](https://webjl.web.app)
+- 🖥️ **Portfolio Website**: [softgamestudio.web.app](https://softgamestudio.web.app)
 
 ---
 
