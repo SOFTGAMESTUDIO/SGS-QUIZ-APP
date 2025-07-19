@@ -75,3 +75,5 @@ node_modules/
 dist 
 
 .env
+File  sgsquiz-release.txt
+sgsquiz-release-sgs.jks
